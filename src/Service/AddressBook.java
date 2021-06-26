@@ -176,6 +176,26 @@ public class AddressBook {
 
 	}
 
+	/**
+	 * UC11 Sort by First name
+	 */
+	private void sortByFirstName() {
+		for (String key : detail.keySet()) {
+			detail.get(key).stream().sorted(Comparator.comparing(Person::getFirstName)).collect(Collectors.toList())
+					.forEach(Person -> System.out.println(Person.toString()));
+		}
+	}
+
+	/**
+	 * UC12 Sort by city name
+	 */
+	private void sortByCity() {
+		for (String key : detail.keySet()) {
+			detail.get(key).stream().sorted(Comparator.comparing(Person::getCity)).collect(Collectors.toList())
+					.forEach(Person -> System.out.println(Person.toString()));
+		}
+	}
+
 	public static void main(String[] args) {
 		AddressBook runner = new AddressBook();
 		runner.displayWelcome();
@@ -204,8 +224,13 @@ public class AddressBook {
 			case 6:
 				runner.searchBycity();
 				break;
-
 			case 7:
+				runner.sortByFirstName();
+				break;
+			case 8:
+				runner.sortByCity();
+				break;
+			case 9:
 				isExit = true;
 				break;
 			default:
