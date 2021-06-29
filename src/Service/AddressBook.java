@@ -1,16 +1,32 @@
 package Service;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Address Book 
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import com.opencsv.CSVReader;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import Model.Person;
 
@@ -196,7 +212,104 @@ public class AddressBook {
 		}
 	}
 
-	public static void main(String[] args) {
+	/**
+	 * UC13: File IO Exception
+	 * @throws IOException 
+	 */
+	public void writeToFile() throws IOException {
+		FileOutputStream writeData = new FileOutputStream("BookDetail.txt");
+		ObjectOutputStream writeStream = new ObjectOutputStream(writeData);
+		try {
+		
+			writeStream.writeObject(detail);
+			writeStream.flush();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			writeStream.close();
+			
+		}
+		
+	}
+	
+
+	/**
+	 * Reads objects from file
+	 * Prints them on console
+	 * @throws IOException 
+	 */
+	public void readFromFile() throws IOException {
+		FileInputStream readData = new FileInputStream("BookDetail.txt");
+		ObjectInputStream readStream = new ObjectInputStream(readData);
+		try {
+			Map<String,ArrayList<Person>> bookdetail = (Map<String, ArrayList<Person>>) readStream.readObject();
+			System.out.println(bookdetail);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			readStream.close();
+		}
+	}
+	
+	/**
+	 * UC 14
+	 *  Read the Address Book with Persons Contact
+     * with CSV File
+	 */
+	public void readCsv() {
+		try (CSVReader reader = new CSVReader(new FileReader("contacts.csv"));)
+		{
+			String[] nextLine;
+			while((nextLine = reader.readNext()) != null) {
+				if(nextLine != null) {
+					System.out.println(Arrays.toString(nextLine));
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Read complete");
+	}
+	
+	/**
+	 * 
+	 * @throws CsvDataTypeMismatchException
+	 * @throws CsvRequiredFieldEmptyException
+	 */
+	@SuppressWarnings("unchecked")
+	public void writeToCsv() throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+		try(FileWriter writer = new FileWriter("Bookcontacts.csv"))
+		{
+			@SuppressWarnings("rawtypes")
+			ColumnPositionMappingStrategy mappingStrategy=
+                    new ColumnPositionMappingStrategy();
+			
+			mappingStrategy.setType(Person.class);
+			String[] columns = new String[] {"FirstName","LastName","Address",
+					"city","state","zip","phone","email"};
+			mappingStrategy.setColumnMapping(columns);
+			
+			@SuppressWarnings("rawtypes")
+			StatefulBeanToCsvBuilder<Person> builder = 
+					new StatefulBeanToCsvBuilder(writer); 
+			
+			@SuppressWarnings("rawtypes")
+			StatefulBeanToCsv beanWriter = 
+			          builder.withMappingStrategy(mappingStrategy).build();
+			
+			beanWriter.write(personList);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
 		AddressBook runner = new AddressBook();
 		runner.displayWelcome();
 
@@ -230,7 +343,13 @@ public class AddressBook {
 			case 8:
 				runner.sortByCity();
 				break;
-			case 9:
+			case 9 :
+				runner.writeToFile();
+				break;
+			case 10 :
+				runner.readFromFile();
+				break;
+			case 11:
 				isExit = true;
 				break;
 			default:
