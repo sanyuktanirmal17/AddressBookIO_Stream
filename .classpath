@@ -9,5 +9,19 @@
 	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/opencsv-4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/opencsv-4.1-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/opencsv-4.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/commons-text-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/commons-lang3-3.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/commons-collections-3.2.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/commons-beanutils-1.9.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.12.3/jackson-core-2.12.3.jar" sourcepath="C:/Users/Admin/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.12.3/jackson-core-2.12.3-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="com.fasterxml.jackson.core"/>
+			<attribute name="maven.artifactId" value="jackson-core"/>
+			<attribute name="maven.version" value="2.12.3"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

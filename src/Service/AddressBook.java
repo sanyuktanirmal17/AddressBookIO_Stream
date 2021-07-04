@@ -1,5 +1,7 @@
-package Service;
 
+package service;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -21,6 +23,8 @@ import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -28,11 +32,11 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-import Model.Person;
+import model.Person;
 
 public class AddressBook {
 
-	private static Scanner sc = new Scanner(System.in);
+	private static Scanner scanner = new Scanner(System.in);
 	private ArrayList<Person> personList = null;
 	private Map<String, ArrayList<Person>> detail = new HashMap<>();
 	public String city;
@@ -50,24 +54,24 @@ public class AddressBook {
 	private void add() {
 
 		System.out.println("Add details in city you want?");
-		city = sc.next();
+		city = scanner.next();
 		Person person = new Person();
 		System.out.println("First Name :");
-		person.setFirstName(sc.next());
+		person.setFirstName(scanner.next());
 		System.out.println("Last name : ");
-		person.setLastName(sc.next());
+		person.setLastName(scanner.next());
 		System.out.println("Address :");
-		person.setAddress(sc.next());
+		person.setAddress(scanner.next());
 		System.out.println("City :");
-		person.setCity(sc.next());
+		person.setCity(scanner.next());
 		System.out.println("State :");
-		person.setState(sc.next());
+		person.setState(scanner.next());
 		System.out.println("Zip :");
-		person.setZip(sc.next());
+		person.setZip(scanner.next());
 		System.out.println("Phone :");
-		person.setPhone(sc.next());
+		person.setPhone(scanner.next());
 		System.out.println("Email :");
-		person.setEmail(sc.next());
+		person.setEmail(scanner.next());
 
 		if (detail.containsKey(city)) {
 			detail.get(city).add(person);
@@ -84,49 +88,49 @@ public class AddressBook {
 	 */
 	private void edit() {
 		System.out.println("Enter the city to which u want to edit person ");
-		city = sc.next();
+		city = scanner.next();
 		String enteredName;
 		System.out.println("Enter First name of contact to edit it ");
-		enteredName = sc.next();
+		enteredName = scanner.next();
 		for (int i = 0; i < detail.get(city).size(); i++) {
 			if (detail.get(city).get(i).getFirstName().equals(enteredName)) {
 				int check = 0;
 				System.out.println("Person found , what do you want to edit ?");
 				System.out.println(
 						"Enter\n1.First Name\n2.Last Name\n3.Address\n4.city\n5.State\n6.Zip\n7.Phone\n8.Email");
-				check = sc.nextInt();
+				check = scanner.nextInt();
 				switch (check) {
 				case 1:
 					System.out.println("Enter new first name");
-					detail.get(city).get(i).setFirstName(sc.next());
+					detail.get(city).get(i).setFirstName(scanner.next());
 					break;
 				case 2:
 					System.out.println("Enter new last name");
-					detail.get(city).get(i).setLastName(sc.next());
+					detail.get(city).get(i).setLastName(scanner.next());
 					break;
 				case 3:
 					System.out.println("Enter new Address");
-					detail.get(city).get(i).setAddress(sc.next());
+					detail.get(city).get(i).setAddress(scanner.next());
 					break;
 				case 4:
 					System.out.println("Enter new city");
-					detail.get(city).get(i).setCity(sc.next());
+					detail.get(city).get(i).setCity(scanner.next());
 					break;
 				case 5:
 					System.out.println("Enter new state");
-					detail.get(city).get(i).setState(sc.next());
+					detail.get(city).get(i).setState(scanner.next());
 					break;
 				case 6:
 					System.out.println("Enter new zip");
-					detail.get(city).get(i).setZip(sc.next());
+					detail.get(city).get(i).setZip(scanner.next());
 					break;
 				case 7:
 					System.out.println("Enter new phone number");
-					detail.get(city).get(i).setPhone(sc.next());
+					detail.get(city).get(i).setPhone(scanner.next());
 					break;
 				case 8:
 					System.out.println("Enter new email");
-					detail.get(city).get(i).setEmail(sc.next());
+					detail.get(city).get(i).setEmail(scanner.next());
 					break;
 				default:
 					System.out.println("Invalid Entry");
@@ -142,7 +146,7 @@ public class AddressBook {
 	 */
 	private void delete() {
 		System.out.println("Enter First name  to delete  ");
-		String enteredName = sc.next();
+		String enteredName = scanner.next();
 		for (int i = 0; i < detail.get(city).size(); i++) {
 			if (detail.get(city).get(i).getFirstName().equals(enteredName))
 				detail.get(city).remove(i);
@@ -164,7 +168,7 @@ public class AddressBook {
 	 */
 	private void search() {
 		System.out.println("Enter name to search across all books");
-		String searchKey = sc.next();
+		String searchKey = scanner.next();
 		for (String key : detail.keySet()) {
 			detail.get(key).stream().filter(personList1 -> personList1.getFirstName().equals(searchKey))
 					.collect(Collectors.toList()).forEach(Person -> System.out.println(Person.toString()));
@@ -178,7 +182,7 @@ public class AddressBook {
 	 */
 	private void searchBycity() {
 		System.out.println("Enter city name to display all contacts");
-		String searchKey = sc.next();
+		String searchKey = scanner.next();
 		AtomicInteger count = new AtomicInteger(0);
 		if (detail.containsKey(searchKey)) {
 			detail.get(searchKey).stream().forEach(Person -> {
@@ -309,6 +313,26 @@ public class AddressBook {
 		}
 	}
 	
+	public void convertToJson() {
+		String result="";
+		try{
+
+			ObjectMapper mapper = new ObjectMapper();
+			result = mapper.writeValueAsString(personList);
+			for(Person person : personList) {
+				mapper.writeValue(new File("AddressDetails.json"), person);
+			}
+			
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JacksonException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(result);
+     }
+	
 	public static void main(String[] args) throws IOException {
 		AddressBook runner = new AddressBook();
 		runner.displayWelcome();
@@ -317,7 +341,7 @@ public class AddressBook {
 		while (!isExit) {
 			System.out.println(
 					"Enter options\n1.Add\n2.Edit\n3.Delete\n4.Show\n5.Search\n6.ShowCity\n7.SortByName\n8.SortByCity\n9.Exit");
-			int userInput = sc.nextInt();
+			int userInput = scanner.nextInt();
 			switch (userInput) {
 			case 1:
 				runner.add();
